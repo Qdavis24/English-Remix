@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% from "components.html" import hero, grid %}
+
+{% block body %}
+    {{ hero("WCU Resource Guide", url_for('static', filename='images/index-hero.jpg')) }}
+    <section class="flex flex-col justify-center items-center space-y-24 mt-10">
+
+        {{ grid(['people.svg', 'money.svg', 'map.svg', 'examine.svg'], texts) }}
+
+    </section>
+{% endblock %}

@@ -1,0 +1,17 @@
+{% macro hero(text, url) %}
+    <section class="relative flex justify-center items-center w-screen h-[60vh]">
+        <img class="absolute object-cover object-top w-full h-full opacity-75" src="{{url}}"/>
+        <h1 class="text-5xl font-bold text-white drop-shadow-lg tracking-wide">{{ text }}</h1>
+    </section>
+{% endmacro %}
+
+{% macro grid(svgs, texts) %}
+        <div class="w-[50vw] h-[50vh] grid grid-cols-2 m-3">
+            {% for i in range(4) %}
+            <div class="relative p-4 {% if i % 2 == 0 %}border-r{% endif %} {% if i < 2 %}border-b{% endif %}">
+                <img class="relative top-0 left-0 w-[3vw] h-[3vh] bg-gray-50 rounded-full" src="{{ url_for('static', filename='svg/' + svgs[i]) }}" alt="icon">
+                <p class="text-sm leading-relaxed text-gray-200 font-normal font-sans m-5">{{ texts[i] }}</p>
+            </div>
+            {% endfor %}
+        </div>
+{% endmacro %}
