@@ -20,10 +20,10 @@
 
             <!-- Chevrons -->
             <img id="chevron-right" onclick="slideCards('right')"
-                 class="absolute w-[2vw] right-60 top-1/2 -translate-y-1/2 hover:scale-125 duration-1000 rounded-full cursor-pointer z-10"
+                 class="absolute w-[2vw] sm:right-10 lg:right-60 top-1/2 -translate-y-1/2 hover:scale-125 duration-1000 rounded-full cursor-pointer z-10"
                  src="{{ url_for('static', filename='svg/chevron-right.svg') }}"/>
             <img id="chevron-left" onclick="slideCards('left')"
-                 class="rotate-180 absolute w-[2vw] left-60 top-1/2 -translate-y-1/2 hover:scale-125 duration-1000 rounded-full cursor-pointer z-10"
+                 class="rotate-180 absolute w-[2vw] sm:left-10 lg:left-60 top-1/2 -translate-y-1/2 hover:scale-125 duration-1000 rounded-full cursor-pointer z-10"
                  src="{{ url_for('static', filename='svg/chevron-right.svg') }}"
                  style="opacity:0;"/>
         </div>

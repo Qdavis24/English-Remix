@@ -6,4 +6,10 @@
     .link {
         @apply text-center underline hover:text-white duration-500;
     }
+    .title {
+        @apply lg:text-2xl sm:text-xl
+    }
+    .par {
+        @apply lg:text-sm sm:text-lg
+    }
 }

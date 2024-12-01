@@ -6,7 +6,7 @@
 {% endmacro %}
 
 {% macro grid(svgs, texts) %}
-    <div id='grid' class="lg:w-[60vw] sm:w-[75vw] h-fit grid lg:grid-cols-2 sm:grid-cols-1 m-3">
+    <div id='grid' class="lg:w-[60vw] sm:w-[90vw] h-fit grid lg:grid-cols-2 sm:grid-cols-1 m-3">
         {% for i in range(4) %}
             <div class="relative p-4 border-white -m-[.5px] {% if i < 2 %} border-b {% else %} border-t {% endif %} {% if i % 2 == 0 %} border-r {% else %} border-l{% endif %}
                  hover:scale-110 hover:z-40 hover:bg-gradient-to-tr hover:from-gray-light hover:to-gray-dark hover:shadow-lg p-5
@@ -16,8 +16,8 @@
                 <img class="relative top-0 left-0 w-[3vw] bg-gray-50 rounded-full"
                      src="{{ url_for('static', filename='svg/' + svgs[i]) }}" alt="icon">
 
-                <h2 class="text-center text-xl font-bold text-white-text mt-3 mb-3 tracking-tight">{{ texts[i][0] }}</h2>
-                <p class="text-sm leading-relaxed text-gray-200 font-normal font-sans m-5">{{ texts[i][1] }}</p>
+                <h2 class="text-center title font-bold text-white-text mt-3 mb-3 tracking-tight">{{ texts[i][0] }}</h2>
+                <p class="par leading-relaxed text-gray-200 font-normal font-sans m-5">{{ texts[i][1] }}</p>
 
 
             </div>
@@ -27,18 +27,18 @@
 
 {% macro card(image, title, par, href, content, border) %}
     {% if href %}<a id="card" href="{{ href }}"> {% endif %}
-<div class="border-{{ border }} border-2 flex flex-col items-center w-[40vw] h-fit rounded-lg bg-gray-light">
+<div class="border-{{ border }} border-2 flex flex-col items-center sm:w-[80vw] lg:w-[40vw] h-fit rounded-lg bg-gray-light">
     <div class="relative flex justify-center items-center w-full h-fit">
         <img class="w-full object-contain opacity-70 rounded-t-lg" src="{{ image }}"/>
         <div class="absolute w-full m-auto z-40 text-center">
-            <h1 class="text-2xl font-bold text-white-text tracking-tight">{{ title }} </h1>
+            <h1 class="title font-bold text-white-text tracking-tight">{{ title }} </h1>
             {% if href %}
                 <p class="w-full text-base mt-2 bg-white bg-opacity-50">Click on card to learn more!</p>{% endif %}
         </div>
 
     </div>
     {% if par %}
-        <p class="text-sm leading-relaxed text-gray-200 font-normal font-sans m-5">
+        <p class="par leading-relaxed text-gray-200 font-normal font-sans m-5">
             {{ par }}
         </p>
     {% elif content %}
@@ -68,7 +68,7 @@
 {% macro comment_board(comments, action) %}
     <div class="flex flex-col">
         <!-- Comments Display -->
-        <div class="bg-white rounded-t-lg shadow-md p-6 w-[60vw] h-fit">
+        <div class="bg-white rounded-t-lg shadow-md p-6 sm:w-full lg:w-[60vw] h-fit">
             {% if comments %}
                 {% for comment in comments %}
                     <div class="flex items-start mb-4">
