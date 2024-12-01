@@ -1,11 +1,12 @@
-from flask import Blueprint, render_template, request, redirect, url_for
-from ..helpers import save_comment, retrieve_comments
+from flask import Blueprint, render_template, request, redirect, url_for, send_file
+import datetime as dt
+from ..helpers import save_question, retrieve_questions
 from ..models import LlcComments, WcComments
 
-index_bp = Blueprint("index", __name__, "../templates")
+main_bp = Blueprint("main", __name__, "../templates")
 
 
-@index_bp.route("/")
+@main_bp.route("/")
 def index():
     grid_texts = [
         ["Welcome to Campus Resources",
@@ -49,9 +50,9 @@ def index():
     return render_template("index.html", grid_texts=grid_texts, card_texts=card_texts)
 
 
-@index_bp.route("/Lamda-Learning-Center")
+@main_bp.route("/Lamda-Learning-Center")
 def llc():
-    comments = retrieve_comments(LlcComments)
+    questions = retrieve_questions(LlcComments)
     schedule = [
         ["Monday", "10:00 a.m. - 12:00 p.m., 2:00 p.m. - 6:00 p.m."],
         ["Tuesday", "10:00 a.m. - 12:00 p.m., 2:00 p.m. - 6:00 p.m."],
@@ -79,19 +80,19 @@ def llc():
                       227, 229, and 231, which is where the LLC is housed."""
 
     return render_template("llc.html", schedule=schedule, services_grid=services_grid,
-                           location_card=location_card, comments=comments)
+                           location_card=location_card, questions=questions)
 
 
-@index_bp.route("/LLC-submission", methods=["POST"])
+@main_bp.route("/LLC-submission", methods=["POST"])
 def submit_llc():
     form_data = request.form.to_dict()
-    save_comment(name=form_data['name'], message=form_data['message'], table=LlcComments)
-    return redirect(url_for('index.llc'))
+    save_question(name=form_data['name'], question=form_data['question'], table=LlcComments, date=dt.datetime.now())
+    return redirect(url_for('main.llc'))
 
 
-@index_bp.route("/Writing-Center")
+@main_bp.route("/Writing-Center")
 def wc():
-    comments = retrieve_comments(WcComments)
+    questions = retrieve_questions(WcComments)
     schedule = [
         ["Sunday", "4:00 - 7:30 p.m."],
         ["Monday", "1:00 - 6:00 p.m."],
@@ -125,10 +126,17 @@ def wc():
                          center is directed by Jennifer Foster Caldwell, M.A., who serves as both a Lecturer in English
                          and the Writing Center Director."""
     return render_template("wc.html", schedule=schedule, services_grid=services_grid,
-                           location_card=location_card, comments=comments)
+                           location_card=location_card, questions=questions)
 
-@index_bp.route("/WC-submission", methods=["POST"])
+
+@main_bp.route("/WC-submission", methods=["POST"])
 def submit_wc():
     form_data = request.form.to_dict()
-    save_comment(name=form_data['name'], message=form_data['message'], table=WcComments)
-    return redirect(url_for('index.wc'))
+    save_question(name=form_data['name'], question=form_data['question'], table=WcComments, date=dt.datetime.now())
+    return redirect(url_for('main.wc'))
+
+
+@main_bp.route("/Works-Cited")
+def works_cited():
+    path = "./static/works-cited.pdf"
+    return send_file(path, mimetype="application/pdf", as_attachment=False)

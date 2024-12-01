@@ -8,9 +8,9 @@
         {{ grid(['brain.svg', 'tools.svg', 'support.svg', 'hours.svg'], services_grid) }}
 
         <div class="relative w-full h-fit overflow-hidden">
-            <!-- Carousel container -->
+
             <div class="flex transition-transform duration-500" id="carousel">
-                <!-- Cards side by side -->
+
                 <div id="card-WC" class="flex justify-center items-center w-full flex-shrink-0">
                     {{ card(image=url_for('static', filename='images/hours.jpg'), title="Hours", content=calender(schedule), border='accent-gold') }}
                 </div>
@@ -19,7 +19,7 @@
                 </div>
             </div>
 
-            <!-- Chevrons -->
+
             <img id="chevron-right" onclick="slideCards('right')"
                  class="absolute w-[2vw] sm:right-10 lg:right-60 top-1/2 -translate-y-1/2 hover:scale-125 duration-1000 rounded-full cursor-pointer z-10"
                  src="{{ url_for('static', filename='svg/chevron-right.svg') }}"/>
@@ -29,7 +29,7 @@
                  style="opacity:0;"/>
         </div>
 
-        {{ comment_board(comments, url_for('index.submit_wc')) }}
+        {{ comment_board(questions, url_for('main.submit_wc')) }}
 
     </div>
 {% endblock %}

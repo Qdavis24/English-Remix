@@ -1,1 +1,1 @@
-from .index import index_bp
+from .main import main_bp

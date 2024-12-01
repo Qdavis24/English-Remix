@@ -11,10 +11,10 @@
             <div class="flex transition-transform duration-500" id="carousel">
                 <!-- Cards side by side -->
                 <div id="card-WC" class="flex justify-center w-full flex-shrink-0">
-                    {{ card(url_for('static', filename='images/Writing Center.jpg'), "Writing Center", card_texts[0], border='accent-red', href=url_for('index.wc')) }}
+                    {{ card(url_for('static', filename='images/Writing Center.jpg'), "Writing Center", card_texts[0], border='accent-red', href=url_for('main.wc')) }}
                 </div>
                 <div id="card-LLC" class="flex justify-center w-full flex-shrink-0">
-                    {{ card(url_for('static', filename='images/LLC.jpg'), "Lambda Learning Center", card_texts[1], border='accent-gold', href=url_for('index.llc')) }}
+                    {{ card(url_for('static', filename='images/LLC.jpg'), "Lambda Learning Center", card_texts[1], border='accent-gold', href=url_for('main.llc')) }}
                 </div>
             </div>
 
