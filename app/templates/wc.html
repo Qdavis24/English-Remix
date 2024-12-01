@@ -1,20 +1,21 @@
 {% extends "base.html" %}
-{% from "components.html" import hero, grid, card %}
+{% from "components.html" import hero, card, grid, calender, comment_board %}
 
 {% block body %}
-    {{ hero("WCU Resource Guide", url_for('static', filename='images/index-hero.jpg')) }}
-    <section class="flex flex-col justify-center items-center space-y-24 mt-16 mb-16">
+    {{ hero("Writing Center", url_for('static', filename='images/wc-page.jpg')) }}
+    <div class="flex flex-col justify-center items-center w-full h-fit space-y-32 my-20">
 
-        {{ grid(['people.svg', 'money.svg', 'map.svg', 'examine.svg'], grid_texts) }}
+        {{ grid(['brain.svg', 'tools.svg', 'support.svg', 'hours.svg'], services_grid) }}
+
         <div class="relative w-full h-fit overflow-hidden">
             <!-- Carousel container -->
             <div class="flex transition-transform duration-500" id="carousel">
                 <!-- Cards side by side -->
-                <div id="card-WC" class="flex justify-center w-full flex-shrink-0">
-                    {{ card(url_for('static', filename='images/Writing Center.jpg'), "Writing Center", card_texts[0], border='accent-red', href=url_for('index.wc')) }}
+                <div id="card-WC" class="flex justify-center items-center w-full flex-shrink-0">
+                    {{ card(image=url_for('static', filename='images/hours.jpg'), title="Hours", content=calender(schedule), border='accent-gold') }}
                 </div>
-                <div id="card-LLC" class="flex justify-center w-full flex-shrink-0">
-                    {{ card(url_for('static', filename='images/LLC.jpg'), "Lambda Learning Center", card_texts[1], border='accent-gold', href=url_for('index.llc')) }}
+                <div id="card-LLC" class="flex justify-center items-center w-full flex-shrink-0">
+                    {{ card(image=url_for('static', filename='images/llc.jpg'), title='Location', par=location_card,border='accent-gold' ) }}
                 </div>
             </div>
 
@@ -28,6 +29,7 @@
                  style="opacity:0;"/>
         </div>
 
-    </section>
+        {{ comment_board(comments, url_for('index.submit_wc')) }}
 
+    </div>
 {% endblock %}

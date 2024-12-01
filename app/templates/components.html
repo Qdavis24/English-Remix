@@ -1,17 +1,124 @@
 {% macro hero(text, url) %}
-    <section class="relative flex justify-center items-center w-screen h-[60vh]">
-        <img class="absolute object-cover object-top w-full h-full opacity-75" src="{{url}}"/>
+    <section class="relative flex justify-center items-center w-screen sm:h-[20vh] lg:h-[40vh]">
+        <img class="absolute object-cover object-top w-full h-full opacity-75" src="{{ url }}"/>
         <h1 class="text-5xl font-bold text-white drop-shadow-lg tracking-wide">{{ text }}</h1>
     </section>
 {% endmacro %}
 
 {% macro grid(svgs, texts) %}
-        <div class="w-[50vw] h-[50vh] grid grid-cols-2 m-3">
-            {% for i in range(4) %}
-            <div class="relative p-4 {% if i % 2 == 0 %}border-r{% endif %} {% if i < 2 %}border-b{% endif %}">
-                <img class="relative top-0 left-0 w-[3vw] h-[3vh] bg-gray-50 rounded-full" src="{{ url_for('static', filename='svg/' + svgs[i]) }}" alt="icon">
-                <p class="text-sm leading-relaxed text-gray-200 font-normal font-sans m-5">{{ texts[i] }}</p>
+    <div id='grid' class="lg:w-[60vw] sm:w-[75vw] h-fit grid lg:grid-cols-2 sm:grid-cols-1 m-3">
+        {% for i in range(4) %}
+            <div class="relative p-4 border-white -m-[.5px] {% if i < 2 %} border-b {% else %} border-t {% endif %} {% if i % 2 == 0 %} border-r {% else %} border-l{% endif %}
+                 hover:scale-110 hover:z-40 hover:bg-gradient-to-tr hover:from-gray-light hover:to-gray-dark hover:shadow-lg p-5
+                 {{ ['origin-bottom-right', 'origin-bottom-left', 'origin-top-right', 'origin-top-left'][i] }}
+                 duration-500">
+
+                <img class="relative top-0 left-0 w-[3vw] bg-gray-50 rounded-full"
+                     src="{{ url_for('static', filename='svg/' + svgs[i]) }}" alt="icon">
+
+                <h2 class="text-center text-xl font-bold text-white-text mt-3 mb-3 tracking-tight">{{ texts[i][0] }}</h2>
+                <p class="text-sm leading-relaxed text-gray-200 font-normal font-sans m-5">{{ texts[i][1] }}</p>
+
+
             </div>
-            {% endfor %}
+        {% endfor %}
+    </div>
+{% endmacro %}
+
+{% macro card(image, title, par, href, content, border) %}
+    {% if href %}<a id="card" href="{{ href }}"> {% endif %}
+<div class="border-{{ border }} border-2 flex flex-col items-center w-[40vw] h-fit rounded-lg bg-gray-light">
+    <div class="relative flex justify-center items-center w-full h-fit">
+        <img class="w-full object-contain opacity-70 rounded-t-lg" src="{{ image }}"/>
+        <div class="absolute w-full m-auto z-40 text-center">
+            <h1 class="text-2xl font-bold text-white-text tracking-tight">{{ title }} </h1>
+            {% if href %}
+                <p class="w-full text-base mt-2 bg-white bg-opacity-50">Click on card to learn more!</p>{% endif %}
         </div>
+
+    </div>
+    {% if par %}
+        <p class="text-sm leading-relaxed text-gray-200 font-normal font-sans m-5">
+            {{ par }}
+        </p>
+    {% elif content %}
+
+        {{ content }}
+
+
+    {% endif %}
+
+
+</div>
+{% if href %}</a> {% endif %}
+
+{% endmacro %}
+
+{% macro calender(schedule) %}
+    <div class="flex flex-col w-5/6 h-full m-3">
+        {% for day in schedule %}
+            <div class="flex flex-row w-full h-1/7 border-2 border-accent-gold p-2 {% if loop.index % 2 == 0 %}bg-gray-light{% else %}bg-gray-dark{% endif %}">
+                <h2 class="text-lg font-medium text-white-text tracking-tight border-r border-accent-gold w-1/3">{{ day[0] }}</h2>
+                <p class="flex items-center ml-8 text-sm leading-relaxed text-gray-200 font-normal font-sans">{{ day[1] }}</p>
+            </div>
+        {% endfor %}
+    </div>
+{% endmacro %}
+
+{% macro comment_board(comments, action) %}
+    <div class="flex flex-col">
+        <!-- Comments Display -->
+        <div class="bg-white rounded-t-lg shadow-md p-6 w-[60vw] h-fit">
+            {% if comments %}
+                {% for comment in comments %}
+                    <div class="flex items-start mb-4">
+                        <div>
+                            <h3 class="font-bold text-gray-800">{{ comment[0] }}</h3>
+                            <p class="text-gray-600">{{ comment[1] }}</p>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <h3 class="w-full h-full flex justify-center items-center font-bold text-gray-800">No comments yet!</h3>
+            {% endif %}
+        </div>
+
+        <!-- Comment Form -->
+        <div class="bg-white rounded-b-lg shadow-md p-6 w-[60vw]">
+            <form action="{{ action }}" method="POST" class="space-y-6">
+                <input type="hidden" name="csrf_token" value="{{ CSRF_TOKEN }}">
+
+                <div class="space-y-2">
+                    <label for="name" class="block text-sm font-medium text-gray-700">Name:</label>
+                    <input
+                            type="text"
+                            name="name"
+                            id="name"
+                            placeholder="Enter your name"
+                            required
+                            class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 placeholder-gray-400"
+                    >
+                </div>
+
+                <div class="space-y-2">
+                    <label for="message" class="block text-sm font-medium text-gray-700">Message:</label>
+                    <textarea
+                            name="message"
+                            id="message"
+                            placeholder="Enter your message"
+                            rows="4"
+                            required
+                            class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 placeholder-gray-400"
+                    ></textarea>
+                </div>
+
+                <button
+                        type="submit"
+                        class="w-full px-4 py-2 text-white bg-blue-500 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-150 ease-in-out"
+                >
+                    Add Comment
+                </button>
+            </form>
+        </div>
+    </div>
 {% endmacro %}

@@ -4,3 +4,6 @@ tailwind.config.js
 node_modules
 *.pyc
 .idea
+instance
+extracted-texts.txt
+scrapper.py
