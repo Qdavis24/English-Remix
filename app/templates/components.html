@@ -76,13 +76,13 @@
                                     </button>
                                 </form>
                             {% endif %}
-                            <h3 class="font-bold text-gray-800">{{ question[0] }}:</h3>
-                            <p class="ml-5 text-gray-600">{{ question[1] }}</p>
-                            <h3 class="font-bold text-gray-800">Answer</h3>
+                            <h3 class="font-bold text-gray-800">Question:</h3>
+                            <p class="ml-5 text-gray-600">{{ question[0] }} asks, {{ question[1] }}</p>
+                            <h3 class="font-bold text-gray-800">Answer:</h3>
                             <p class="text-gray-600 ml-5">{{ question[2] }}</p>
                         </div>
                     </div>
-                    <hr/>
+                    <hr class="mb-2"/>
 
                     {% if admin %}
                         <form action="{{ action }}" method="POST">
@@ -101,7 +101,7 @@
                                     type="submit"
                                     class="w-fit px-4 py-2 text-white bg-blue-500 rounded-md hover:bg-blue-600 focus:outline-none
                                 focus:ring-2 focus:ring-blue-300 transition duration-150 ease-in-out">
-                                Add Comment
+                                Add Answer
                             </button>
                         </form>
                     {% endif %}
@@ -142,7 +142,7 @@
                             type="submit"
                             class="w-fit px-4 py-2 text-white bg-blue-500 rounded-md hover:bg-blue-600 focus:outline-none
                         focus:ring-2 focus:ring-blue-300 transition duration-150 ease-in-out">
-                        Add Comment
+                        Add Question
                     </button>
                 </form>
             </div>

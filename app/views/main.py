@@ -17,7 +17,6 @@ def admin_protect(f):
         secret_key = request.form.get('secret_key') or request.args.get("secret_key")
         if not secret_key or not secrets.compare_digest(secret_key, os.environ.get('admin_key')):
             abort(404)
-        print(secret_key)
         return f(*args, **kwargs, secret_key=secret_key)
 
     return wrapper
