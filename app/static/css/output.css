@@ -708,6 +708,10 @@ video {
   margin-left: 5rem;
 }
 
+.ml-5 {
+  margin-left: 1.25rem;
+}
+
 .ml-8 {
   margin-left: 2rem;
 }
@@ -751,6 +755,10 @@ video {
 
 .h-full {
   height: 100%;
+}
+
+.h-screen {
+  height: 100vh;
 }
 
 .w-1\/3 {

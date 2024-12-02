@@ -1,9 +1,26 @@
-from flask import Blueprint, render_template, request, redirect, url_for, send_file
+import os
+from functools import wraps
+from flask import Blueprint, render_template, request, redirect, url_for, send_file, abort
 import datetime as dt
-from ..helpers import save_question, retrieve_questions
+import secrets
+from ..helpers import db_save_question, db_retrieve_questions, db_add_answers, db_delete_questions
 from ..models import LlcComments, WcComments
 
+TABLES = {"WcComments": WcComments, "LlcComments": LlcComments}
+
 main_bp = Blueprint("main", __name__, "../templates")
+
+
+def admin_protect(f):
+    @wraps(f)
+    def wrapper(*args, **kwargs):
+        secret_key = request.form.get('secret_key') or request.args.get("secret_key")
+        if not secret_key or not secrets.compare_digest(secret_key, os.environ.get('admin_key')):
+            abort(404)
+        print(secret_key)
+        return f(*args, **kwargs, secret_key=secret_key)
+
+    return wrapper
 
 
 @main_bp.route("/")
@@ -52,7 +69,7 @@ def index():
 
 @main_bp.route("/Lamda-Learning-Center")
 def llc():
-    questions = retrieve_questions(LlcComments)
+    questions = db_retrieve_questions(LlcComments)
     schedule = [
         ["Monday", "10:00 a.m. - 12:00 p.m., 2:00 p.m. - 6:00 p.m."],
         ["Tuesday", "10:00 a.m. - 12:00 p.m., 2:00 p.m. - 6:00 p.m."],
@@ -86,13 +103,13 @@ def llc():
 @main_bp.route("/LLC-submission", methods=["POST"])
 def submit_llc():
     form_data = request.form.to_dict()
-    save_question(name=form_data['name'], question=form_data['question'], table=LlcComments, date=dt.datetime.now())
+    db_save_question(name=form_data['name'], question=form_data['question'], table=LlcComments, date=dt.datetime.now())
     return redirect(url_for('main.llc'))
 
 
 @main_bp.route("/Writing-Center")
 def wc():
-    questions = retrieve_questions(WcComments)
+    questions = db_retrieve_questions(WcComments)
     schedule = [
         ["Sunday", "4:00 - 7:30 p.m."],
         ["Monday", "1:00 - 6:00 p.m."],
@@ -132,7 +149,7 @@ def wc():
 @main_bp.route("/WC-submission", methods=["POST"])
 def submit_wc():
     form_data = request.form.to_dict()
-    save_question(name=form_data['name'], question=form_data['question'], table=WcComments, date=dt.datetime.now())
+    db_save_question(name=form_data['name'], question=form_data['question'], table=WcComments, date=dt.datetime.now())
     return redirect(url_for('main.wc'))
 
 
@@ -140,3 +157,48 @@ def submit_wc():
 def works_cited():
     path = "./static/works-cited.pdf"
     return send_file(path, mimetype="application/pdf", as_attachment=False)
+
+
+
+@main_bp.route("/Admin")
+@admin_protect
+def admin(secret_key=None):
+    questions = db_retrieve_questions(WcComments, LlcComments)
+    print(questions)
+    return render_template("admin.html", questions=questions, admin=True, secret_key=secret_key)
+
+
+
+@main_bp.route("/Admin-Post", methods=["POST"])
+@admin_protect
+def admin_post(secret_key=None):
+    form_data = request.form.to_dict()
+
+    del form_data['secret_key']
+    del form_data['csrf_token']
+
+    to_add = []
+    for key, value in form_data.items():
+        table_name, table_id = key.split("-")
+        answer = value
+        to_add.append([TABLES[table_name], table_id, answer])
+    print(to_add)
+    db_add_answers(to_add)
+    return redirect(url_for('main.admin', secret_key=secret_key))
+
+
+
+@main_bp.route("/Delete-Question", methods=["POST"])
+@admin_protect
+def delete_questions(secret_key=None):
+    form_data = request.form.to_dict()
+
+    del form_data['secret_key']
+    del form_data['csrf_token']
+
+    to_delete = []
+    for key, value in form_data.items():
+        table_name, table_id = key.split("-")
+        to_delete.append([TABLES[table_name], table_id])
+    db_delete_questions(to_delete)
+    return redirect(url_for('main.admin', secret_key=secret_key))

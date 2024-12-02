@@ -58,55 +58,94 @@
     </div>
 {% endmacro %}
 
-{% macro comment_board(questions, action) %}
+{% macro comment_board(questions, action, admin, secret_key, CSRF_TOKEN) %}
     <div class="flex flex-row w-screen lg:h-[80vh] sm:h-[40vh] p-20">
         <div class="bg-white p-6 w-2/3 h-full overflow-y-scroll">
             {% if questions %}
-                {% for questions in questions %}
+                {% for question in questions %}
                     <div class="flex items-start mb-4">
                         <div>
-                            <h3 class="font-bold text-gray-800">{{ questions[0] }}</h3>
-                            <p class="text-gray-600">{{ questions[1] }}</p>
+                            {% if admin %}
+                                <form action="{{ url_for('main.delete_questions') }}" method="POST">
+                                    <input type="hidden" name="csrf_token" value="{{ CSRF_TOKEN }}">
+                                    <input type="hidden" name="secret_key" value="{{ secret_key }}">
+                                    <input type="hidden" name="{{ question[4] }}-{{ question[3] }}">
+
+                                    <button type="submit" class="w-fit h-fit rounded-full bg-red">
+                                        x
+                                    </button>
+                                </form>
+                            {% endif %}
+                            <h3 class="font-bold text-gray-800">{{ question[0] }}:</h3>
+                            <p class="ml-5 text-gray-600">{{ question[1] }}</p>
+                            <h3 class="font-bold text-gray-800">Answer</h3>
+                            <p class="text-gray-600 ml-5">{{ question[2] }}</p>
                         </div>
                     </div>
+                    <hr/>
+
+                    {% if admin %}
+                        <form action="{{ action }}" method="POST">
+                            <input type="hidden" name="csrf_token" value="{{ CSRF_TOKEN }}">
+                            <input type="hidden" name="secret_key" value="{{ secret_key }}">
+                            <label for="{{ question[4] }}-{{ question[3] }}"
+                                   class="block text-sm font-medium text-gray-700">Answer:</label>
+                            <textarea
+                                    name="{{ question[4] }}-{{ question[3] }}"
+                                    placeholder="Enter your question..."
+                                    rows="4"
+                                    class="w-full mt-3 px-4 py-2 border border-gray-300 rounded-md focus:ring-2
+                                focus:ring-blue-500
+                                focus:border-blue-500 placeholder-gray-400"></textarea>
+                            <button
+                                    type="submit"
+                                    class="w-fit px-4 py-2 text-white bg-blue-500 rounded-md hover:bg-blue-600 focus:outline-none
+                                focus:ring-2 focus:ring-blue-300 transition duration-150 ease-in-out">
+                                Add Comment
+                            </button>
+                        </form>
+                    {% endif %}
                 {% endfor %}
             {% else %}
                 <h3 class="w-full h-full flex justify-center items-center font-bold text-gray-800">No questions
                                                                                                    yet!</h3>
             {% endif %}
+
         </div>
-        <div class="bg-white p-6 flex-grow">
-            <form action="{{ action }}" method="POST" class="space-y-6">
-                <input type="hidden" name="csrf_token" value="{{ CSRF_TOKEN }}">
-                <div class="space-y-2">
-                    <label for="name" class="block text-sm font-medium text-gray-700">Name:</label>
-                    <input
-                            type="text"
-                            name="name"
-                            id="name"
-                            placeholder="Enter your name"
-                            required
-                            class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500
+        {% if not admin %}
+            <div class="bg-white p-6 flex-grow">
+                <form action="{{ action }}" method="POST" class="space-y-6">
+                    <input type="hidden" name="csrf_token" value="{{ CSRF_TOKEN }}">
+                    <div class="space-y-2">
+                        <label for="name" class="block text-sm font-medium text-gray-700">Name:</label>
+                        <input
+                                type="text"
+                                name="name"
+                                id="name"
+                                placeholder="Enter your name"
+                                required
+                                class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500
                             focus:border-blue-500 placeholder-gray-400">
-                </div>
-                <div class="space-y-2">
-                    <label for="question" class="block text-sm font-medium text-gray-700">Question:</label>
-                    <textarea
-                            name="question"
-                            id="question"
-                            placeholder="Enter your question..."
-                            rows="4"
-                            required
-                            class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500
+                    </div>
+                    <div class="space-y-2">
+                        <label for="question" class="block text-sm font-medium text-gray-700">Question:</label>
+                        <textarea
+                                name="question"
+                                id="question"
+                                placeholder="Enter your question..."
+                                rows="4"
+                                required
+                                class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500
                             focus:border-blue-500 placeholder-gray-400"></textarea>
-                </div>
-                <button
-                        type="submit"
-                        class="w-fit px-4 py-2 text-white bg-blue-500 rounded-md hover:bg-blue-600 focus:outline-none
+                    </div>
+                    <button
+                            type="submit"
+                            class="w-fit px-4 py-2 text-white bg-blue-500 rounded-md hover:bg-blue-600 focus:outline-none
                         focus:ring-2 focus:ring-blue-300 transition duration-150 ease-in-out">
-                    Add Comment
-                </button>
-            </form>
-        </div>
-    </div>
+                        Add Comment
+                    </button>
+                </form>
+            </div>
+            </div>
+        {% endif %}
 {% endmacro %}

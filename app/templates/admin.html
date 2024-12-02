@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% from "components.html" import comment_board %}
+{% block body %}
+    <div class="flex justify-center items-center w-screen h-screen">
+        {{ comment_board(questions=questions,action=url_for('main.admin_post'), admin=admin, secret_key=secret_key,
+    CSRF_TOKEN=CSRF_TOKEN) }}
+    </div>
+
+{% endblock %}
