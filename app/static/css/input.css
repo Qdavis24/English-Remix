@@ -7,9 +7,9 @@
         @apply text-center underline hover:text-white duration-500;
     }
     .title {
-        @apply lg:text-xl sm:text-2xl
+        @apply lg:text-3xl sm:text-4xl
     }
     .par {
-        @apply lg:text-sm sm:text-xl
+        @apply lg:text-lg sm:text-3xl
     }
 }

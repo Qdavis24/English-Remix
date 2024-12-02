@@ -1,5 +1,5 @@
 {% macro hero(text, url) %}
-    <section class="relative flex justify-center items-center w-screen sm:h-[20vh] lg:h-[40vh]">
+    <section class="relative flex justify-center items-center w-screen lg:h-[60vh] sm:h-[50vh]">
         <img class="absolute object-cover object-top w-full h-full opacity-75" src="{{ url }}"/>
         <h1 class="text-5xl font-bold text-white drop-shadow-lg tracking-wide">{{ text }}</h1>
     </section>
@@ -30,7 +30,7 @@
     <div class="relative flex justify-center items-center w-full h-fit">
         <img class="w-full object-contain opacity-70 rounded-t-lg" src="{{ image }}"/>
         <div class="absolute w-full m-auto z-40 text-center">
-            <h1 class="text-3xl font-bold text-white-text tracking-tight">{{ title }} </h1>
+            <h1 class="title font-bold text-white-text tracking-tight">{{ title }} </h1>
             {% if href %}
                 <p class="w-full text-base mt-2 bg-white bg-opacity-50">Click on card to learn more!</p>{% endif %}
         </div>
@@ -59,93 +59,110 @@
 {% endmacro %}
 
 {% macro comment_board(questions, action, admin, secret_key, CSRF_TOKEN) %}
-    <div class="flex flex-row w-screen lg:h-[80vh] sm:h-[40vh] p-20">
-        <div class="bg-white p-6 w-2/3 h-full overflow-y-scroll">
-            {% if questions %}
-                {% for question in questions %}
-                    <div class="flex items-start mb-4">
-                        <div>
-                            {% if admin %}
-                                <form action="{{ url_for('main.delete_questions') }}" method="POST">
-                                    <input type="hidden" name="csrf_token" value="{{ CSRF_TOKEN }}">
-                                    <input type="hidden" name="secret_key" value="{{ secret_key }}">
-                                    <input type="hidden" name="{{ question[4] }}-{{ question[3] }}">
 
-                                    <button type="submit" class="w-fit h-fit rounded-full bg-red">
-                                        x
-                                    </button>
-                                </form>
-                            {% endif %}
-                            <h3 class="font-bold text-gray-800">Question:</h3>
-                            <p class="ml-5 text-gray-600">{{ question[0] }} asks, {{ question[1] }}</p>
-                            <h3 class="font-bold text-gray-800">Answer:</h3>
-                            <p class="text-gray-600 ml-5">{{ question[2] }}</p>
+    <div class="w-screen flex flex-col items-center justify-center lg:h-[80vh] sm:h-[40vh] bg-gray-light p-10 border-2
+    border-accent-gold">
+        <h1 class="title text-center font-sans tracking-tight text-white-text underline my-7">Q & A</h1>
+        <div class="flex flex-row sm:w-[90vw] lg:w-5/6 h-full rounded-md p-5 bg-gray-dark">
+            <div class="py-6 w-1/2 h-full overflow-y-scroll">
+                <h1 class="title text-center font-sans tracking-tight text-white-text mb-7"></h1>
+                {% if questions %}
+                    {% for question in questions %}
+                        <div class="flex items-start border-b border-accent-gold">
+                            <div class="w-full flex flex-row">
+                                <div class="w-1/2 border-r border-accent-gold p-3">
+                                    <h3 class="font-bold text-white-text">Question:</h3>
+                                    <p class="ml-5 mt-2 text-white-text opacity-75">{{ question[0] }} asks,</p>
+                                    <p class="ml-5 text-white-text opacity-90">{{ question[1] }}</p>
+                                </div>
+                                <div class="w-1/2 p-3">
+                                    {% if admin %}
+                                        <form action="{{ url_for('main.delete_questions') }}" method="POST"
+                                              class="p-2 bg-red rounded-full">
+                                            <input type="hidden" name="csrf_token" value="{{ CSRF_TOKEN }}">
+                                            <input type="hidden" name="secret_key" value="{{ secret_key }}">
+                                            <input type="hidden" name="{{ question[4] }}-{{ question[3] }}">
+
+                                            <button type="submit" class="">
+                                                x
+                                            </button>
+                                        </form>
+                                    {% endif %}
+                                    <h3 class="font-bold text-white-text">Answer:</h3>
+                                    <p class="ml-5 mt-2 text-white-text opacity-75">{{ question[2] }}</p>
+                                </div>
+
+
+                            </div>
                         </div>
-                    </div>
-                    <hr class="mb-2"/>
 
-                    {% if admin %}
-                        <form action="{{ action }}" method="POST">
-                            <input type="hidden" name="csrf_token" value="{{ CSRF_TOKEN }}">
-                            <input type="hidden" name="secret_key" value="{{ secret_key }}">
-                            <label for="{{ question[4] }}-{{ question[3] }}"
-                                   class="block text-sm font-medium text-gray-700">Answer:</label>
-                            <textarea
-                                    name="{{ question[4] }}-{{ question[3] }}"
-                                    placeholder="Enter your question..."
-                                    rows="4"
-                                    class="w-full mt-3 px-4 py-2 border border-gray-300 rounded-md focus:ring-2
+
+                        {% if admin %}
+                            <form action="{{ action }}" method="POST">
+                                <input type="hidden" name="csrf_token" value="{{ CSRF_TOKEN }}">
+                                <input type="hidden" name="secret_key" value="{{ secret_key }}">
+                                <label for="{{ question[4] }}-{{ question[3] }}"
+                                       class="block text-sm font-medium text-gray-700">Answer:</label>
+                                <textarea
+                                        name="{{ question[4] }}-{{ question[3] }}"
+                                        placeholder="Enter your question..."
+                                        rows="4"
+                                        class="w-full mt-3 px-4 py-2 border border-gray-300 rounded-md focus:ring-2
                                 focus:ring-blue-500
                                 focus:border-blue-500 placeholder-gray-400"></textarea>
-                            <button
-                                    type="submit"
-                                    class="w-fit px-4 py-2 text-white bg-blue-500 rounded-md hover:bg-blue-600 focus:outline-none
+                                <button
+                                        type="submit"
+                                        class="w-fit px-4 py-2 text-white bg-blue-500 rounded-md hover:bg-blue-600 focus:outline-none
                                 focus:ring-2 focus:ring-blue-300 transition duration-150 ease-in-out">
-                                Add Answer
-                            </button>
-                        </form>
-                    {% endif %}
-                {% endfor %}
-            {% else %}
-                <h3 class="w-full h-full flex justify-center items-center font-bold text-gray-800">No questions
-                                                                                                   yet!</h3>
-            {% endif %}
+                                    Add Answer
+                                </button>
+                            </form>
+                        {% endif %}
+                    {% endfor %}
+                {% else %}
+                    <h3 class="w-full h-full flex justify-center items-center font-bold text-gray-800">No questions
+                                                                                                       yet!</h3>
+                {% endif %}
 
-        </div>
-        {% if not admin %}
-            <div class="bg-white p-6 flex-grow">
-                <form action="{{ action }}" method="POST" class="space-y-6">
-                    <input type="hidden" name="csrf_token" value="{{ CSRF_TOKEN }}">
-                    <div class="space-y-2">
-                        <label for="name" class="block text-sm font-medium text-gray-700">Name:</label>
-                        <input
-                                type="text"
-                                name="name"
-                                id="name"
-                                placeholder="Enter your name"
-                                required
-                                class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500
+            </div>
+            {% if not admin %}
+                <div class="p-6 flex-grow h-full">
+                    <h1 class="title text-center font-sans tracking-tight text-white-text">Ask a question.</h1>
+                    <form action="{{ action }}" method="POST" class="space-y-6">
+                        <input type="hidden" name="csrf_token" value="{{ CSRF_TOKEN }}">
+                        <div class="space-y-2">
+                            <label for="name" class="block text-sm font-medium text-white-text">Name:</label>
+                            <input
+                                    type="text"
+                                    name="name"
+                                    id="name"
+                                    placeholder="Enter your name"
+                                    required
+                                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500
                             focus:border-blue-500 placeholder-gray-400">
-                    </div>
-                    <div class="space-y-2">
-                        <label for="question" class="block text-sm font-medium text-gray-700">Question:</label>
-                        <textarea
-                                name="question"
-                                id="question"
-                                placeholder="Enter your question..."
-                                rows="4"
-                                required
-                                class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500
+                        </div>
+                        <div class="space-y-2">
+                            <label for="question" class="block text-sm font-medium text-white-text">Question:</label>
+                            <textarea
+                                    name="question"
+                                    id="question"
+                                    placeholder="Enter your question..."
+                                    rows="8"
+                                    required
+                                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2
+                                    focus:ring-blue-500
                             focus:border-blue-500 placeholder-gray-400"></textarea>
-                    </div>
-                    <button
-                            type="submit"
-                            class="w-fit px-4 py-2 text-white bg-blue-500 rounded-md hover:bg-blue-600 focus:outline-none
+                        </div>
+                        <button
+                                type="submit"
+                                class="w-fit px-4 py-2 text-white bg-blue-500 rounded-md hover:bg-blue-600 focus:outline-none
                         focus:ring-2 focus:ring-blue-300 transition duration-150 ease-in-out">
-                        Add Question
-                    </button>
-                </form>
-            </div>
-            </div>
-        {% endif %}
+                            Add Question
+                        </button>
+                    </form>
+                </div>
+
+            {% endif %}
+        </div>
+    </div>
 {% endmacro %}
