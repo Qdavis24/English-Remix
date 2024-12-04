@@ -25,34 +25,25 @@ def admin_protect(f):
 @main_bp.route("/")
 def index():
     grid_texts = [
-        ["Welcome to Campus Resources",
-         "Whether you're returning to education after years in the workforce, juggling family responsibilities, or"
-         " transitioning from military service, navigating campus resources shouldn't add to your challenges. As a"
-         " nontraditional student, your time and energy are invaluable assets in your educational journey. Your wealth"
-         " of real-world experience brings unique perspectives to the classroom - let us help you connect with the "
-         "resources you need to succeed."],
+        ["Campus Guide",
+         "Navigating campus resources shouldn't add to your challenges as a nontraditional student. Your time and "
+         "energy are invaluable, and your real-world experience enriches the classroom. Let us help you connect with "
+         "resources to support your success."],
 
-        ["Making the Most of Your Investment",
-         "Your investment in higher education goes beyond tuition - it's an investment of your hard-earned time and "
-         "energy. Our guide helps you maximize your return by connecting you with free academic support services that "
-         "can make the difference between struggling alone and thriving with expert guidance. As a nontraditional "
-         "student, you've likely made significant sacrifices to be here; we're dedicated to helping you make the most "
-         "of these valuable resources."],
+        ["Smart Investment",
+         "Higher education is a major investment of time and energy. Maximize your return by utilizing free academic "
+         "support services. As a nontraditional student, you've made sacrifices to be here; we're committed to helping "
+         "you thrive."],
 
-        ["Easy Access to Support Services",
-         "Finding and accessing campus resources shouldn't require detective work, especially when you're juggling "
-         "multiple responsibilities outside of school. This guide provides clear, straightforward information about "
-         "where to go, when services are available, and exactly how to access the support you need. We've streamlined "
-         "the process of connecting you with academic resources so you can spend less time searching and more time "
-         "succeeding in your studies."],
+        ["Resource Access",
+         "Accessing campus resources should be simple. This guide provides clear details on where to go, when services "
+         "are available, and how to use them, so you can focus on succeeding in your studies without extra hassle."],
 
-        ["Available Resources",
-         "Below you'll find detailed information about two essential campus resources: the Writing Center and the "
-         "Lambda Learning Center. Each card provides everything you need to know about these services - from "
-         "scheduling appointments to what to expect during your visit. As a nontraditional student, you've already "
-         "taken the brave step of returning to education; we're here to help you take the next step toward academic"
-         " excellence with confidence and clarity."]
+        ["Resource details",
+         "Learn about essential campus services like the Writing Center and Lambda Learning Center. These guides "
+         "include appointment scheduling and service details, giving you the confidence to achieve academic excellence."]
     ]
+
     card_texts = [
         "The Writing Center offers free support to Western students at any stage of the writing process, from "
         "brainstorming to final drafts. Writing consultants work with students in 25- or 50-minute sessions to help "
@@ -120,22 +111,31 @@ def wc():
     ]
     services_grid = [
         [
-            "Consultation Services",
-            "The Writing Center offers both in-person and online consultations lasting 25 or 50 minutes, allowing students to work directly with experienced writing consultants. These sessions can address any stage of the writing process, from initial brainstorming to final revisions, and consultants serve as engaged readers who provide constructive feedback rather than simply editing papers. The center welcomes writers of all skill levels and assists with any type of writing, including research papers, presentations, application materials, and creative pieces."
+            "Writing Help",
+            "The Writing Center offers in-person and online sessions, lasting 25 or 50 minutes, to support students"
+            " at any stage of the writing process. Consultants provide feedback on brainstorming, revisions, research "
+            "papers, presentations, applications, and creative work without simply editing papers."
         ],
         [
-            "Resource Access & Workspace",
-            "The Writing Center maintains a dedicated workspace in Taylor 112D where students can utilize various writing resources and references, even without a scheduled appointment. The space is equipped with handbooks, style manuals, and online resources that students can access to improve their writing skills independently. The center's environment is designed to be welcoming and supportive, making it an ideal place for students to focus on their writing projects while having help readily available if needed."
+            "Workspace Access",
+            "Located in Taylor 112D, the Writing Center provides a welcoming space for students to focus on writing. "
+            "Equipped with handbooks, style guides, and online resources, it allows independent skill improvement with"
+            " help available if needed."
         ],
         [
-            "Academic Support",
-            "The Writing Center provides specialized assistance with understanding assignment requirements, developing ideas, and planning essays through one-on-one guidance. Consultants work collaboratively with students to identify both areas for improvement and strengths in their writing, helping them develop better writing habits and techniques. The center emphasizes building on students' existing abilities while teaching them strategies for self-editing and revision that will serve them throughout their academic careers."
+            "Essay Guidance",
+            "The Writing Center helps students understand assignments, develop ideas, and plan essays. Consultants "
+            "highlight strengths, suggest improvements, and teach self-editing techniques to build better writing "
+            "habits for academic success."
         ],
         [
-            "Flexible Scheduling Options",
-            "The Writing Center accommodates different student needs through various appointment types, including walk-in sessions, scheduled in-person meetings, and asynchronous online consultations. The center maintains extensive operating hours six days a week, with availability from early afternoon until evening on most weekdays and special Sunday hours to support student schedules. The scheduling system is designed to be convenient and accessible, allowing students to plan ahead or get help when they need it most."
+            "Flexible Hours",
+            "Offering walk-in, scheduled, and online sessions, the Writing Center ensures accessibility with extensive"
+            " hours six days a week. Evening weekday availability and Sunday hours accommodate diverse student "
+            "schedules for convenient support."
         ]
     ]
+
     location_card = """The Writing Center is located in Taylor 112D at Western Colorado University's campus in Gunnison, 
                          CO. Students can find help at 1 Western Way, Gunnison, CO 81231. For questions or assistance, the
                          center can be reached by phone at 970.943.7079 or by email at writingcenter@western.edu. The
@@ -158,14 +158,12 @@ def works_cited():
     return send_file(path, mimetype="application/pdf", as_attachment=False)
 
 
-
 @main_bp.route("/Admin")
 @admin_protect
 def admin(secret_key=None):
     questions = db_retrieve_questions(WcComments, LlcComments)
     print(questions)
     return render_template("admin.html", questions=questions, admin=True, secret_key=secret_key)
-
 
 
 @main_bp.route("/Admin-Post", methods=["POST"])
@@ -184,7 +182,6 @@ def admin_post(secret_key=None):
     print(to_add)
     db_add_answers(to_add)
     return redirect(url_for('main.admin', secret_key=secret_key))
-
 
 
 @main_bp.route("/Delete-Question", methods=["POST"])
